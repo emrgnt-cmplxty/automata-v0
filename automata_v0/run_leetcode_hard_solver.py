@@ -29,14 +29,18 @@ from leetcode_hard_gym.leetcode_env.types import (
 
 from agent.completion_provider import CompletionProvider, RunMode
 
-from utils import parse_arguments
+from utils import parse_arguments, extract_code
 
 logger = logging.getLogger(__name__)
 
 
 LEETCODE_PROBLEMS_PATH = os.path.join(
     get_root_fpath(),
-    "leetcode_hard_gym/leetcode_dataset/data/with_snippets/leetcode_hard_with_snippets_uncontaminated_tests.csv",
+    "leetcode_hard_gym",
+    "leetcode_dataset",
+    "data",
+    "with_snippets",
+    "leetcode_hard_with_snippets_uncontaminated_tests.csv",
 )
 LEETCODE_SOLUTIONS_FILE_NAME = "leetcode_hard_py_40__model_eq_{MODEL}__temp_eq_{TEMPERATURE}__run_mode_eq_{RUN_MODE}.jsonl"
 LEETCODE_SOLUTIONS_OUTPUT_DIR = os.path.join(
@@ -45,6 +49,7 @@ LEETCODE_SOLUTIONS_OUTPUT_DIR = os.path.join(
 
 
 def load_existing_task_ids(existing_data: list[dict]) -> set[str]:
+    """Load existing task ids from the data."""
     return {entry["task_id"] for entry in existing_data}
 
 
@@ -71,6 +76,7 @@ def configure_paths(args: argparse.Namespace) -> None:
 
 
 def load_data(args: argparse.Namespace) -> Tuple[list[dict], set[str]]:
+    """Load existing data."""
     existing_data = load_existing_jsonl(args.output_path)
 
     existing_task_ids = (
@@ -100,7 +106,6 @@ def get_tools(args: argparse.Namespace) -> list:
     #     tools = AgentifiedSolutionOracleOpenAIToolkitBuilder(
     #         leetcode_solution_finder=solutions_finder
     #     ).build_for_open_ai()  # type: ignore
-
     return []
 
 
@@ -145,52 +150,49 @@ def main(logger: logging.Logger):
             f"Running w/ problem at index {index} and context:\n\n{problem_context}"
         )
 
-        try:
-            tools = get_tools()
+        # try:
+        tools = get_tools(args)
 
-            (
-                raw_completion,
-                clean_completion,
-            ) = completion_provider.get_raw_and_cleaned_completions(
-                problem_context, tools
-            )
+        raw_completion = completion_provider.get_completion(
+            task_input=loader.get_problem_context(index),
+            code_snippet=loader.get_snippet(index),
+        )
+        clean_completion = extract_code(raw_completion)
 
-            status, reward, done, submission_result = env.step(
-                LeetCodeSubmission(
-                    code=prep_for_leetcode(clean_completion),
-                    lang=ProgrammingLanguage.PYTHON3,
-                    question_id=loader.get_backend_problem_id(index),
-                    question_slug=loader.get_problem_slug(index),
-                )
+        status, reward, done, submission_result = env.step(
+            LeetCodeSubmission(
+                code=prep_for_leetcode(clean_completion),
+                lang=ProgrammingLanguage.PYTHON3,
+                question_id=loader.get_backend_problem_id(index),
+                question_slug=loader.get_problem_slug(index),
             )
-            logger.info(
-                f"status={status}, reward={reward}, done={done}, submission_result={submission_result}"
-            )
-            solver.log_result(index, reward)
+        )
+        logger.info(
+            f"status={status}, reward={reward}, done={done}, submission_result={submission_result}"
+        )
+        solver.log_result(index, reward)
 
-            completion_seqs.append(
-                {
-                    "task_id": f"LeetCode-Hard/{index}",
-                    "completion": clean_completion,
-                    "raw_completion": raw_completion,
-                    "status": status,
-                    "reward": reward,
-                    "done": done,
-                    "submission_result": submission_result,
-                    "problem_slug": loader.get_problem_slug(index),
-                    "problem_id": loader.get_backend_problem_id(index),
-                    "frontend_problem_id": loader.get_frontend_problem_id(
-                        index
-                    ),
-                }
-            )
-            logger.info(f"Writing output to {args.output_path}")
-            write_jsonl(args.output_path, completion_seqs)
+        completion_seqs.append(
+            {
+                "task_id": f"LeetCode-Hard/{index}",
+                "completion": clean_completion,
+                "raw_completion": raw_completion,
+                "status": status,
+                "reward": reward,
+                "done": done,
+                "submission_result": submission_result,
+                "problem_slug": loader.get_problem_slug(index),
+                "problem_id": loader.get_backend_problem_id(index),
+                "frontend_problem_id": loader.get_frontend_problem_id(index),
+            }
+        )
+        logger.info(f"Writing output to {args.output_path}")
+        write_jsonl(args.output_path, completion_seqs)
 
-        except Exception as e:
-            logger.info(f"Failed with exception {e}")
-            write_jsonl(args.output_path, completion_seqs)
-            solver.log_result(index, False)
+        # except Exception as e:
+        #     logger.info(f"Failed with exception {e}")
+        #     write_jsonl(args.output_path, completion_seqs)
+        #     solver.log_result(index, False)
 
 
 if __name__ == "__main__":
