@@ -35,10 +35,7 @@ class LeetCodeLoader:
         )
         cleaned_snippet = textwrap.dedent(snippet_text)  # type: ignore
 
-        return (
-            f"Title:{row['question_title']}\n\nDescription:\n{description_ex_constraints}",
-            cleaned_snippet,
-        )  # \n\nNote, your final solution MUST BEGIN WITH the snippet shown here - ```python\\n{cleaned_snippet}```"
+        return f"Title:{row['question_title']}\n\nDescription:\n{description_ex_constraints}\n\nNote, your final solution MUST BEGIN WITH the snippet shown here - ```python\\n{cleaned_snippet}```"
 
     def get_problem_id_slug(self, idx: int) -> Tuple[int, int, Any]:
         """Retrieve a problem by its index."""
