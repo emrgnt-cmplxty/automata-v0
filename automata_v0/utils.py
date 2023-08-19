@@ -1,3 +1,4 @@
+import argparse
 import json
 import logging
 import os
@@ -68,3 +69,50 @@ def prep_for_leetcode(code: str) -> str:
             line = "def " + line[4:].replace("(", "(self, ", 1)
         modified_lines.append(f"  {line}")
     return "\n".join(modified_lines)
+
+
+def parse_arguments() -> argparse.Namespace:
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Find similar solutions to LeetCode problems using OpenAI."
+    )
+    parser.add_argument(
+        "--problems_data_path",
+        default=None,
+        help="Path to the LeetCode problems data.",
+    )
+    parser.add_argument(
+        "--solutions_output_data_dir",
+        default=None,
+        help="Path to the solutions JSON file.",
+    )
+    parser.add_argument(
+        "--solutions_output_file_name",
+        default=None,
+        help="Path to the solutions JSON file.",
+    )
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.7,
+        help="Temperature parameter for OpenAI model.",
+    )
+    parser.add_argument(
+        "--run_mode",
+        type=str,
+        default="vanilla",
+        help="Run mode for the OpenAI model.",
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="gpt-3.5-turbo-0613",
+        help="Model name for OpenAI.",
+    )
+    parser.add_argument(
+        "--overwrite",
+        type=bool,
+        default=False,
+        help="Overwrite existing solutions.",
+    )
+    return parser.parse_args()
