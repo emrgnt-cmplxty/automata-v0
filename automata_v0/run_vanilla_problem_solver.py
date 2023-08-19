@@ -2,15 +2,17 @@
 # flake8: noqa
 """Study the dataset."""
 import argparse
-import json
 import logging
 import os
-import sys
+import openai
 
 from evalplus.data import write_jsonl
 from leetcode_solver.leetcode_constants import (
     LEETCODE_PROBLEMS_PATH,
     LEETCODE_SOLUTIONS_PATH,
+)
+from agent.agentified_solution_oracle import (
+    AgentifiedSolutionOracleOpenAIToolkitBuilder,
 )
 from leetcode_solver.leetcode_problems_loader import LeetCodeLoader
 from leetcode_solver.leetcode_problem_solver import LeetCodeSolver
@@ -19,11 +21,9 @@ from automata_v0.utils import (
     get_root_fpath,
     get_configured_logger,
     load_existing_jsonl,
+    prep_for_leetcode,
 )
 
-from automata.config import EmbeddingDataCategory
-
-# from automata.core.utils import get_root_fpath
 from automata.llm import OpenAIEmbeddingProvider
 
 from leetcode_hard_gym.leetcode_env.environment import LeetCodeEnv
@@ -82,6 +82,7 @@ def main(logger: logging.Logger):  # sourcery skip: docstrings-for-functions
 
     # Parse arguments
     args = parser.parse_args()
+    openai.api_key = os.getenv("OPENAI_API_KEY_LOCAL", "")
 
     # Load defaults where appropriate
     args.problems_data_path = args.problems_data_path or LEETCODE_PROBLEMS_PATH
@@ -116,6 +117,9 @@ def main(logger: logging.Logger):  # sourcery skip: docstrings-for-functions
     )
 
     logger.info(f"Loading from {output_path}")
+    if not os.path.exists(output_path):
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
     existing_data = load_existing_jsonl(output_path)
 
     existing_task_ids = (
@@ -129,13 +133,13 @@ def main(logger: logging.Logger):  # sourcery skip: docstrings-for-functions
         task_id = f"LeetCode-Hard/{index}"
 
         if task_id in existing_task_ids and not args.overwrite:
-            print(
+            logger.info(
                 f"Skipping task_id {task_id} as it already exists in the output file."
             )
             continue
         task, snippet = loader.get_problem_context(index)
 
-        print(
+        logger.info(
             f"Running w/ problem at index {index} and context:\n\n{task}, {snippet}"
         )
 
@@ -175,7 +179,9 @@ def main(logger: logging.Logger):  # sourcery skip: docstrings-for-functions
             )
 
             status, reward, done, submission_result = env.step(sub)
-            print(status, reward, done, submission_result)
+            logger.info(
+                f"status={status}, reward={reward}, done={done}, submission_result={submission_result}"
+            )
             solver.log_result(index, reward)
 
             completion_seqs.append(
@@ -183,13 +189,22 @@ def main(logger: logging.Logger):  # sourcery skip: docstrings-for-functions
                     "task_id": f"LeetCode-Hard/{index}",
                     "completion": clean_completion,
                     "raw_completion": raw_completion,
+                    "status": status,
+                    "reward": reward,
+                    "done": done,
+                    "submission_result": submission_result,
+                    "problem_slug": loader.get_problem_slug(index),
+                    "problem_id": loader.get_backend_problem_id(index),
+                    "frontend_problem_id": loader.get_frontend_problem_id(
+                        index
+                    ),
                 }
             )
-            print(f"Writing output to {output_path}")
+            logger.info(f"Writing output to {output_path}")
             write_jsonl(output_path, completion_seqs)
 
         except Exception as e:
-            print(f"Failed with exception {e}")
+            logger.info(f"Failed with exception {e}")
             write_jsonl(output_path, completion_seqs)
             solver.log_result(index, False)
 
