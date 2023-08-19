@@ -20,7 +20,7 @@ AGENT_INSTRUCTIONS = textwrap.dedent(
     - Respond with the entire complete function definition, including the re-stated function definition, and no other functions or classes.
     - Use only built-in libraries and numpy. Assume no additional imports other than those provided and 'from typing import *'.
     - Optimize your algorithm to run as efficiently as possible. This is a Hard LeetCode problem, so in the vast majority of cases, the appropriate solution will run in \(O(N\log N)\) or faster.
-    - Lean heavily on your available functions, `py-set-tests` and `py-set-code-and-run-tests`.
+    - Lean heavily on your available functions, such as `py-set-tests` and `py-set-code-and-run-tests`.
     - Start by re-stating the given tests into the local Python environment, and ensure that your final solution passes all given tests.
 
     ### Result:
@@ -35,6 +35,7 @@ AGENT_INSTRUCTIONS = textwrap.dedent(
     ```
     """
 )
+
 VANILLA_SYSTEM_PROMPT = textwrap.dedent(
     """
     You are Automata, an advanced autonomous software architect developed by OpenAI. 
@@ -87,6 +88,6 @@ ADVANCED_SYSTEM_PROMPT = textwrap.dedent(
 
       Note, the examples are only provided above to give necessary context around the operating procedure. In production, `# ... (Continued interaction) ...` will be replaced with actual conversation contents. 
       
-      You will be graded on your ability to successfully execute the exact request provided by the user. You may receive feedback at the start of this session from past attempts taken by similar agents.{DUMMY}
+      You will be graded on your ability to successfully execute the exact request provided by the user. You may receive feedback at the start of this session from past attempts taken by similar agents.
     """
 )
