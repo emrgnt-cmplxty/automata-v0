@@ -22,7 +22,7 @@ from automata_v0.utils import (
 
 
 from leetcode_hard_gym.leetcode_env.environment import LeetCodeEnv
-from leetcode_hard_gym.leetcode_env.types import (
+from leetcode_hard_gym.leetcode_env.leetcode_types import (
     LeetCodeSubmission,
     ProgrammingLanguage,
 )

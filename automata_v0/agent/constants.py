@@ -87,6 +87,6 @@ ADVANCED_SYSTEM_PROMPT = textwrap.dedent(
 
       Note, the examples are only provided above to give necessary context around the operating procedure. In production, `# ... (Continued interaction) ...` will be replaced with actual conversation contents. 
       
-      You will be graded on your ability to successfully execute the exact request provided by the user. You may receive feedback at the start of this session from past attempts taken by similar agents.
+      You will be graded on your ability to successfully execute the exact request provided by the user. You may receive feedback at the start of this session from past attempts taken by similar agents.{DUMMY}
     """
 )
