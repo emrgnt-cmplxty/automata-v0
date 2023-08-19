@@ -1,5 +1,4 @@
 """Module for the completion provider"""
-import os
 from enum import Enum
 
 from agent.constants import (
@@ -9,13 +8,7 @@ from agent.constants import (
 from automata.agent import OpenAIAutomataAgent
 from automata.config import OpenAIAutomataAgentConfig
 from automata.llm import OpenAIChatCompletionProvider, OpenAIConversation
-from automata.singletons.dependency_factory import dependency_factory
-from automata.singletons.py_module_loader import py_module_loader
-from automata.tools.agent_tool_factory import AgentToolFactory
-from automata.symbol import SymbolGraph
 from automata.experimental.tools import PyInterpreterOpenAIToolkitBuilder
-
-from utils import get_root_fpath
 
 
 class RunMode(Enum):
