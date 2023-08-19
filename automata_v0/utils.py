@@ -1,3 +1,5 @@
+import re
+from bs4 import BeautifulSoup
 import argparse
 import json
 import logging
@@ -100,7 +102,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--run_mode",
         type=str,
-        default="vanilla",
+        default="vanilla-zero-shot",
         help="Run mode for the OpenAI model.",
     )
     parser.add_argument(
@@ -116,3 +118,60 @@ def parse_arguments() -> argparse.Namespace:
         help="Overwrite existing solutions.",
     )
     return parser.parse_args()
+
+
+def clean_html_content(html_content: str) -> str:
+    """Clean the HTML content of a LeetCode problem description"""
+    if not isinstance(html_content, str):
+        return html_content
+    # Parse the HTML content
+    soup = BeautifulSoup(html_content, "html.parser")
+
+    # Convert HTML to text with newline characters
+    text_content = soup.get_text(separator="\n", strip=True)
+
+    # Replace scientific notation numbers
+    cleaned_content = re.sub(
+        r"(\b10)\s+(\d+\b)", r"\1e\2", text_content
+    )  # Replace "10 4" with "10e4"
+
+    # Specific handling for power notation
+    cleaned_content = re.sub(r"(\b\d+)\s+(\d+\b)", r"\1^\2", cleaned_content)
+
+    # Spaces around operators
+    cleaned_content = re.sub(r"(\s*<=\s*)", " <= ", cleaned_content)
+
+    # Replace specific patterns with newline characters
+    cleaned_content = cleaned_content.replace(
+        " . ", ".\n"
+    )  # Newline after periods
+
+    # Specific handling for "O ( n 2 )" pattern
+    cleaned_content = cleaned_content.replace("O ( n^2 )", "O(n^2)")
+
+    # Replace unnecessary characters and whitespace
+    cleaned_content = re.sub(
+        r"\s+", " ", cleaned_content
+    )  # Collapse multiple whitespace
+
+    # Remove spaces after commas and before periods
+    cleaned_content = re.sub(r"\s*,\s*", ", ", cleaned_content)
+    cleaned_content = re.sub(r"\s*\.\s*", ". ", cleaned_content)
+
+    # Specific handling for .length accessor
+    cleaned_content = cleaned_content.replace(" . length", ".length")
+
+    # Remove leading asterisks from problem numbers
+    cleaned_content = re.sub(r"\*+(\d+)\.?", r"\1.", cleaned_content)
+
+    # Remove trailing asterisks
+    cleaned_content = re.sub(r"\*+$", "", cleaned_content)
+
+    # Cleanup .length accessor
+    cleaned_content = cleaned_content.replace(". length", ".length")
+    # Cleanup leading asterisks (in case cmd above missfired)
+    cleaned_content = cleaned_content.replace("***", "")
+    # Cleanup period formatting for programmatic statements.
+    cleaned_content = cleaned_content.replace("'. '", ".")
+
+    return cleaned_content.strip()
