@@ -1,4 +1,3 @@
-
 [submodule "automata_v0/automata"]
 	path = automata_v0/automata
 	url = git@github.com:emrgnt-cmplxty/automata.git

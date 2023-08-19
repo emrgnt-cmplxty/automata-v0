@@ -7,12 +7,13 @@ from agent.constants import (
     AGENT_INSTRUCTIONS,
 )
 from automata.agent import OpenAIAutomataAgent
-from automata.config import OpenAIAutomataAgentConfigBuilder
+from automata.config import OpenAIAutomataAgentConfig
 from automata.llm import OpenAIChatCompletionProvider, OpenAIConversation
 from automata.singletons.dependency_factory import dependency_factory
 from automata.singletons.py_module_loader import py_module_loader
 from automata.tools.agent_tool_factory import AgentToolFactory
 from automata.symbol import SymbolGraph
+from automata.experimental.tools import PyInterpreterOpenAIToolkitBuilder
 
 from utils import get_root_fpath
 
@@ -60,34 +61,16 @@ class CompletionProvider:
 
     def advanced_agent_factory(self, instructions: str) -> OpenAIAutomataAgent:
         """Generates an advanced agent instance."""
-        automata_path = os.path.join(get_root_fpath(), "automata")
-        if not py_module_loader.initialized:
-            py_module_loader.initialize(root_fpath="")
-        symbol_graph = SymbolGraph(
-            os.path.join(
-                automata_path,
-                "automata-embedding-data",
-                "indices",
-                "automata.scip",
-            )
+        tools = PyInterpreterOpenAIToolkitBuilder().build_for_open_ai()
+        config = OpenAIAutomataAgentConfig(
+            stream=True,
+            verbose=True,
+            tools=tools,
+            system_instruction=ADVANCED_SYSTEM_PROMPT,
+            model=self.model,
+            temperature=self.temperature,
         )
-        dependency_factory.set_overrides(symbol_graph=symbol_graph)
-        toolkits = ["py-interpreter"]
-        tool_dependencies = dependency_factory.build_dependencies_for_tools(
-            toolkits
-        )
-        tools = AgentToolFactory.build_tools(toolkits, **tool_dependencies)
-
-        config_builder = (
-            OpenAIAutomataAgentConfigBuilder()
-            .with_stream(True)
-            .with_verbose(True)
-            .with_tools(tools)  # type: ignore
-            .with_system_template(ADVANCED_SYSTEM_PROMPT)
-            .with_model(self.model)
-            .with_temperature(self.temperature)
-        )
-        return OpenAIAutomataAgent(instructions, config_builder.build())
+        return OpenAIAutomataAgent(instructions, config)
 
     def get_formatted_instruction(
         self, task_input: str, code_snippet: str
