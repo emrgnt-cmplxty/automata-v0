@@ -49,7 +49,7 @@ class CompletionProvider:
         """Generates a vanilla completion for the given prompt"""
         if self.run_mode == RunMode.VANILLA_ZERO_SHOT:
             return self.completion_instance.standalone_call(instructions)
-        elif self.run_mode == RunMode.ADVANCED_AGENT:
+        else:
             return self.advanced_agent_factory(instructions).run()
 
     def advanced_agent_factory(self, instructions: str) -> OpenAIAutomataAgent:

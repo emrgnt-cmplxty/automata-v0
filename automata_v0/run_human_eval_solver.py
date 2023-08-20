@@ -1,5 +1,6 @@
 """Basic agency study, e.g. simple completion / agent generation"""
 import argparse
+import openai
 import os
 from tqdm import tqdm
 
@@ -11,14 +12,14 @@ from automata_v0.utils import (
     load_existing_jsonl,
 )
 
+from utils import parse_arguments, extract_code
 
 HUMANEVAL_SOLUTIONS_FILE_NAME = "human_eval_model_eq_{MODEL}_temp_eq_{TEMPERATURE}_run_mode_eq_{RUN_MODE}_solutions.jsonl"
-HUMANEVAL_SOLUTIONS_PATH = os.path.join(
+HUMANEVAL_SOLUTIONS_DIR = os.path.join(
     get_root_fpath(),
     "data",
     "results",
     "humaneval_results",
-    HUMANEVAL_SOLUTIONS_FILE_NAME.replace("-", "_").replace(".", "p"),
 )
 
 
@@ -28,23 +29,10 @@ def load_existing_task_ids(existing_data):
 
 def main() -> None:
     """Main function for generating human eval solutions"""
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--model", type=str, default="gpt-3.5-turbo-0613", help=""
-    )
-    parser.add_argument("--overwrite", type=bool, default=False)
-    parser.add_argument("--start_index", type=int, default=0, help="")
-    parser.add_argument("--end_index", type=int, default=164, help="")
-    parser.add_argument(
-        "--output_fpath",
-        type=str,
-        default=HUMANEVAL_SOLUTIONS_PATH,
-        help="",
-    )
-    parser.add_argument("--temperature", type=float, default=0.7, help="")
-    parser.add_argument("--run_mode", type=str, default="vanilla", help="")
+    # Parse arguments
+    args = parse_arguments()
 
-    args = parser.parse_args()
+    openai.api_key = os.getenv("OPENAI_API_KEY_LOCAL", "")
 
     if not RunMode(args.run_mode):
         raise ValueError(
@@ -58,14 +46,21 @@ def main() -> None:
     )
     problems = get_human_eval_plus()
 
-    task_ids = sorted(problems.keys())[args.start_index : args.end_index]
+    task_ids = sorted(problems.keys())
     prompts = [problems[task_id]["prompt"] for task_id in task_ids]
     num_samples = len(prompts)
     print(f"Number of samples: {num_samples}")
 
-    output_path = args.output_fpath.format(
-        MODEL=args.model, TEMPERATURE=args.temperature, RUN_MODE=args.run_mode
+    output_dir = args.solutions_output_data_dir or HUMANEVAL_SOLUTIONS_DIR
+    output_file_name = (
+        args.solutions_output_file_name
+        or HUMANEVAL_SOLUTIONS_FILE_NAME.format(
+            MODEL=args.model,
+            TEMPERATURE=args.temperature,
+            RUN_MODE=args.run_mode,
+        )
     )
+    output_path = os.path.join(output_dir, output_file_name)
 
     existing_data = load_existing_jsonl(output_path)
     existing_task_ids = (
@@ -87,12 +82,12 @@ def main() -> None:
         raw_prompt = prompts[i]
         print(f"Passing raw prompt ={raw_prompt}")
 
-        (
-            raw_completion,
-            clean_completion,
-        ) = completion_provider.get_raw_and_cleaned_completions(
-            raw_prompt, raw_prompt
+        raw_completion = completion_provider.get_completion(
+            task_input=raw_prompt,
+            code_snippet=raw_prompt,
         )
+        clean_completion = extract_code(raw_completion)
+
         print(f"Found Raw Completion = {raw_completion}")
 
         completion_seqs.append(

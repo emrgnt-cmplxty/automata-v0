@@ -32,11 +32,13 @@ exclude = '''
   /(
       \.eggs         # exclude a few common directories in the
     | \.git          # root of the project
-    | llm_battle_ground/leetcode_hard_gym
+    | automata_v0/leetcode_hard_gym
+    | automata_v0/automata
+    | automata_v0/reflexion
 )/
 )
 '''
 
 [tool.mypy]
 ignore_missing_imports = true
-exclude = '(llm_battle_ground/leetcode_hard_gym)/'
+exclude = '(automata_v0/leetcode_hard_gym|automata_v0/automata|automata_v0/reflexion)/'

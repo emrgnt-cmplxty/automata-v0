@@ -138,6 +138,7 @@ def main(logger: logging.Logger):
                         lang=ProgrammingLanguage.PYTHON3,
                         question_id=loader.get_backend_problem_id(index),
                         question_slug=loader.get_problem_slug(index),
+                        timeout=12,
                     )
                 )
                 print(
