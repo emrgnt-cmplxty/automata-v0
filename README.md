@@ -33,7 +33,7 @@ poetry run python automata_v0/run_leetcode_hard_solver.py --run_mode=vanilla-zer
 ```bash
 poetry run python automata_v0/run_leetcode_hard_solver.py --run_mode=advanced-agent-with-py-interpreter --model=gpt-4-0613
 
-# >>> expect to see 2-4 out of 40 correct
+# >>> expect to see 3-4 out of 40 correct
 ```
 
 ### Vanilla HumanEval

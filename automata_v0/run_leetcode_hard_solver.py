@@ -128,7 +128,7 @@ def main(logger: logging.Logger):
                 clean_completion = extract_code(raw_completion)
                 status, reward, done, submission_result = env.step(
                     LeetCodeSubmission(
-                        code=prep_for_leetcode(clean_completion),
+                        code=clean_completion,
                         lang=ProgrammingLanguage.PYTHON3,
                         question_id=loader.get_backend_problem_id(index),
                         question_slug=loader.get_problem_slug(index),
