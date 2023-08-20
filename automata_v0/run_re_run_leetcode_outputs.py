@@ -75,9 +75,11 @@ def main(logger: logging.Logger):
                 lang=ProgrammingLanguage.PYTHON3,
                 question_id=result["problem_id"],
                 question_slug=result["problem_slug"],
+                timeout=12,
             )
         )
         logger.info(f"status={status}, reward={reward}, done={done}")
+        logger.info(f"submission_result = {submission_result}")
 
         outpath = args.problems_data_path.replace(".jsonl", "_fixed.jsonl")
 
