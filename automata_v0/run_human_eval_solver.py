@@ -1,25 +1,17 @@
 """Basic agency study, e.g. simple completion / agent generation"""
-import argparse
-import openai
 import os
-from tqdm import tqdm
 
+import openai
 from agent.completion_provider import CompletionProvider, RunMode
 from evalplus.data import get_human_eval_plus, write_jsonl
+from tqdm import tqdm
+from utils import extract_code, parse_arguments
 
-from automata_v0.utils import (
-    get_root_fpath,
-    load_existing_jsonl,
-)
-
-from utils import parse_arguments, extract_code
+from automata_v0.utils import get_root_fpath, load_existing_jsonl
 
 HUMANEVAL_SOLUTIONS_FILE_NAME = "human_eval_model_eq_{MODEL}_temp_eq_{TEMPERATURE}_run_mode_eq_{RUN_MODE}_solutions.jsonl"
 HUMANEVAL_SOLUTIONS_DIR = os.path.join(
-    get_root_fpath(),
-    "data",
-    "results",
-    "humaneval_results",
+    get_root_fpath(), "data", "results", "humaneval_results", "{MODEL}"
 )
 
 
@@ -51,14 +43,17 @@ def main() -> None:
     num_samples = len(prompts)
     print(f"Number of samples: {num_samples}")
 
-    output_dir = args.solutions_output_data_dir or HUMANEVAL_SOLUTIONS_DIR
+    output_dir = (
+        args.solutions_output_data_dir
+        or HUMANEVAL_SOLUTIONS_DIR.format(MODEL=args.model.replace("-", "_"))
+    )
     output_file_name = (
         args.solutions_output_file_name
         or HUMANEVAL_SOLUTIONS_FILE_NAME.format(
             MODEL=args.model,
-            TEMPERATURE=args.temperature,
+            TEMPERATURE=str(args.temperature).replace(".", "p"),
             RUN_MODE=args.run_mode,
-        )
+        ).replace("-", "_")
     )
     output_path = os.path.join(output_dir, output_file_name)
 

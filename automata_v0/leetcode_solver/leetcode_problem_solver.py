@@ -6,18 +6,17 @@ from typing import Optional
 from agent.agentified_solution_oracle import (
     AgentifiedSolutionOracleOpenAIToolkitBuilder,
 )
-from leetcode_solver.leetcode_constants import (
-    ADVANCED_SYSTEM_PROMPT_WITH_SOLUTION_ORACLE,
-    EVAL_SYSTEM_PROMPT,
-)
-from leetcode_solver.leetcode_solutions_finder import LeetCodeSolutionsFinder
-
 from automata.agent import OpenAIAutomataAgent
 from automata.config import (
     OpenAIAutomataAgentConfig,
     OpenAIAutomataAgentConfigBuilder,
 )
 from automata.llm import FunctionCall, OpenAIChatMessage
+from leetcode_solver.leetcode_constants import (
+    ADVANCED_SYSTEM_PROMPT_WITH_SOLUTION_ORACLE,
+    EVAL_SYSTEM_PROMPT,
+)
+from leetcode_solver.leetcode_solutions_finder import LeetCodeSolutionsFinder
 
 
 class LeetCodeSolver:

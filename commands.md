@@ -17,6 +17,42 @@ poetry install
 
 ## LeetCode-Hard
 
+## HumanEval Evaluations
+
+### Evaluate automata results on HumanEval
+
+```bash
+poetry run evalplus.evaluate --dataset humaneval --samples=automata_v0/data/results/humaneval_results/human_eval_model_eq_gpt_4_0613_temp_eq_0p7_run_mode_eq_vanilla.jsonl --parallel 4 --min-time-limit 0.5 --gt-time-limit-factor 5
+# Base
+# {'pass@1': 0.8170731707317073}
+# Base + Extra
+# {'pass@1': 0.7560975609756098}
+
+poetry run evalplus.evaluate --dataset humaneval --samples=automata_v0/data/results/humaneval_results/human_eval_model_eq_gpt_4_0613_temp_eq_0p7_run_mode_eq_advanced_agent_with_interpreter.jsonl --parallel 4 --min-time-limit 0.5 --gt-time-limit-factor 5
+# Base
+# {'pass@1': 0.8170731707317073}
+# Base + Extra
+# {'pass@1': 0.7439024390243902}
+```
+
+### Evaluate reflexion results on HumanEval
+
+```bash
+cd automata_v0/reflexion/programming_runs
+
+python main.py --run_name "test_reflexion" --root_dir "root" --dataset_path ./benchmarks/humaneval-py.jsonl --strategy "reflexion" --language "py" --model "gpt-4-0613" --pass_at_k "1" --max_iters "2" --verbose
+
+cp root/simple_leetcode_python3_gpt4_visible/leetcode-hard-py-40-uncontaminated_tests._simple_1_gpt-4-0613_pass_at_k_1_py.jsonl ../../data/results/leetcode_results/gpt_4_0613/leetcode-hard-py-40-uncontaminated_tests._simple_1_gpt-4-0613_pass_at_k_1_py.jsonl
+
+cd -
+
+poetry run evalplus.evaluate --dataset humaneval --samples=automata_v0/data/results/humaneval_results/humaneval-py._reflexion_5_gpt-4_pass_at_k_1_py.jsonl --parallel 4 --min-time-limit 0.5 --gt-time-limit-factor 5
+# Base
+# {'pass@1': 0.725609756097561}
+# Base + Extra
+# {'pass@1': 0.6524390243902439}
+```
+
 ### Generate and evaluate automata results on LeetCode-Hard
 
 ```bash
@@ -54,40 +90,4 @@ python main.py --run_name "reflexion_leetcode_python3_gpt4_react_constraints_vis
 python main.py --run_name "reflexion_leetcode_python3_gpt4_react_constraints_visible" --root_dir "root" --dataset_path ./executors/leetcode_env/leetcode_dataset/data/humaneval/leetcode-hard-py-40-uncontaminated_tests.jsonl --strategy "reflexion" --language "py" --model "gpt-4-0613" --pass_at_k "1" --max_iters "5" --is_leetcode --verbose
 
 cd -
-```
-
-## HumanEval Evaluations
-
-### Evaluate reflexion results on HumanEval
-
-```bash
-cd automata_v0/reflexion/programming_runs
-
-python main.py --run_name "test_reflexion" --root_dir "root" --dataset_path ./benchmarks/humaneval-py.jsonl --strategy "reflexion" --language "py" --model "gpt-4-0613" --pass_at_k "1" --max_iters "2" --verbose
-
-cp root/simple_leetcode_python3_gpt4_visible/leetcode-hard-py-40-uncontaminated_tests._simple_1_gpt-4-0613_pass_at_k_1_py.jsonl ../../data/results/leetcode_results/gpt_4_0613/leetcode-hard-py-40-uncontaminated_tests._simple_1_gpt-4-0613_pass_at_k_1_py.jsonl
-
-cd -
-
-poetry run evalplus.evaluate --dataset humaneval --samples=automata_v0/data/results/humaneval_results/humaneval-py._reflexion_5_gpt-4_pass_at_k_1_py.jsonl --parallel 4 --min-time-limit 0.5 --gt-time-limit-factor 5
-# Base
-# {'pass@1': 0.725609756097561}
-# Base + Extra
-# {'pass@1': 0.6524390243902439}
-```
-
-### Evaluate automata results on HumanEval
-
-```bash
-poetry run evalplus.evaluate --dataset humaneval --samples=automata_v0/data/results/humaneval_results/human_eval_model_eq_gpt_4_0613_temp_eq_0p7_run_mode_eq_vanilla.jsonl --parallel 4 --min-time-limit 0.5 --gt-time-limit-factor 5
-# Base
-# {'pass@1': 0.8170731707317073}
-# Base + Extra
-# {'pass@1': 0.7560975609756098}
-
-poetry run evalplus.evaluate --dataset humaneval --samples=automata_v0/data/results/humaneval_results/human_eval_model_eq_gpt_4_0613_temp_eq_0p7_run_mode_eq_advanced_agent_with_interpreter.jsonl --parallel 4 --min-time-limit 0.5 --gt-time-limit-factor 5
-# Base
-# {'pass@1': 0.8170731707317073}
-# Base + Extra
-# {'pass@1': 0.7439024390243902}
 ```
