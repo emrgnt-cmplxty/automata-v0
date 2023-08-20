@@ -16,7 +16,6 @@ poetry update && poetry install
 
 ```bash
 echo OPENAI_API_KEY_LOCAL=your_openai_key\\nLEETCODE_SESSION=your_leet_code_session > .env
-poetry run python automata_v0/run_vanilla_problem_solver.py
 ```
 
 ## Minimal Reproduction -
@@ -26,16 +25,15 @@ poetry run python automata_v0/run_vanilla_problem_solver.py
 ```bash
 poetry run python automata_v0/run_leetcode_hard_solver.py --run_mode=vanilla-zero-shot --model=gpt-4-0613
 
-# >>> expect to see 1 or 2/40 correct
+# >>> expect to see 1-2 out of 40 correct
 ```
-
 
 ### Automata LeetCode-Hard
 
 ```bash
 poetry run python automata_v0/run_leetcode_hard_solver.py --run_mode=advanced-agent-with-py-interpreter --model=gpt-4-0613
 
-# >>> expect to see 2 to 4/40 correct
+# >>> expect to see 2-4 out of 40 correct
 ```
 
 ### Vanilla HumanEval
@@ -44,6 +42,7 @@ poetry run python automata_v0/run_leetcode_hard_solver.py --run_mode=advanced-ag
 poetry run python automata_v0/run_human_eval_solver.py --run_mode=vanilla-zero-shot --model=gpt-4-0613
 
 poetry run evalplus.evaluate --dataset humaneval --samples=automata_v0/data/results/humaneval_results/gpt_4_0613/human_eval_model_eq_gpt_4_0613_temp_eq_0p7_run_mode_eq_vanilla_zero_shot_solutions.jsonl --parallel 4 --min-time-limit 0.5 --gt-time-limit-factor 5
+
 # Base
 # {'pass@1': 0.8170731707317073}
 # Base + Extra
@@ -56,6 +55,7 @@ poetry run evalplus.evaluate --dataset humaneval --samples=automata_v0/data/resu
 poetry run python automata_v0/run_human_eval_solver.py --run_mode=advanced-agent-with-py-interpreter --model=gpt-4-0613
 
 poetry run evalplus.evaluate --dataset humaneval --samples=automata_v0/data/results/humaneval_results/gpt_4_0613/human_eval_model_eq_gpt_4_0613_temp_eq_0p7_run_mode_eq_vanilla.jsonl --parallel 4 --min-time-limit 0.5 --gt-time-limit-factor 5
+
 # Base
 # {'pass@1': 0.8170731707317073}
 # Base + Extra
