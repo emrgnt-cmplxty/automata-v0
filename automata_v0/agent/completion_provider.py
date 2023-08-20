@@ -1,14 +1,11 @@
 """Module for the completion provider"""
 from enum import Enum
 
-from agent.constants import (
-    ADVANCED_SYSTEM_PROMPT,
-    AGENT_INSTRUCTIONS,
-)
+from agent.constants import ADVANCED_SYSTEM_PROMPT, AGENT_INSTRUCTIONS
 from automata.agent import OpenAIAutomataAgent
 from automata.config import OpenAIAutomataAgentConfig
-from automata.llm import OpenAIChatCompletionProvider, OpenAIConversation
 from automata.experimental.tools import PyInterpreterOpenAIToolkitBuilder
+from automata.llm import OpenAIChatCompletionProvider, OpenAIConversation
 
 
 class RunMode(Enum):

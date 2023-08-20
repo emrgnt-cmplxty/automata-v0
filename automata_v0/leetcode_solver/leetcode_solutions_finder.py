@@ -6,16 +6,15 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 import tiktoken
+from automata.agent import OpenAIAutomataAgent
+from automata.config import OpenAIAutomataAgentConfigBuilder
+from automata.core.utils import get_logging_config
 from leetcode_solver.leetcode_constants import (
     DIFFICULTIES,
     FETCHER_INSTRUCTIONS,
     MAX_TOKENS,
     RETRIEVER_SYSTEM_PROMPT,
 )
-
-from automata.agent import OpenAIAutomataAgent
-from automata.config import OpenAIAutomataAgentConfigBuilder
-from automata.core.utils import get_logging_config
 
 logger = logging.getLogger(__name__)
 logging.config.dictConfig(get_logging_config())

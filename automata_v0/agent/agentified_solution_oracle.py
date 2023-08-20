@@ -3,8 +3,6 @@ import logging
 import logging.config
 from typing import List
 
-from leetcode_solver.leetcode_solutions_finder import LeetCodeSolutionsFinder
-
 from automata.agent import (
     AgentToolkitBuilder,
     AgentToolkitNames,
@@ -17,6 +15,7 @@ from automata.singletons.toolkit_registry import (
     OpenAIAutomataAgentToolkitRegistry,
 )
 from automata.tools.tool_base import Tool
+from leetcode_solver.leetcode_solutions_finder import LeetCodeSolutionsFinder
 
 logger = logging.getLogger(__name__)
 logging.config.dictConfig(get_logging_config())

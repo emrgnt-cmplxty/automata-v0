@@ -1,9 +1,10 @@
-import re
-from bs4 import BeautifulSoup
 import argparse
 import json
 import logging
 import os
+import re
+
+from bs4 import BeautifulSoup
 
 
 def get_root_fpath() -> str:
