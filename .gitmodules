@@ -4,3 +4,6 @@
 [submodule "automata_v0/leetcode_hard_gym"]
 	path = automata_v0/leetcode_hard_gym
 	url = git@github.com:emrgnt-cmplxty/leetcode-hard-gym.git
+[submodule "automata_v0/reflexion"]
+	path = automata_v0/reflexion
+	url = git@github.com:emrgnt-cmplxty/reflexion.git
