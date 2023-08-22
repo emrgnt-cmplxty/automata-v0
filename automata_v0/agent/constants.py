@@ -12,7 +12,7 @@ AGENT_MATH_INSTRUCTIONS = textwrap.dedent(
 
     ### Guidelines:
     - **Think Step by Step**: Break the problem down into simple step-by-step components, and then solve each component individually.
-    - **Set Tests**: Set tests with `py-set-tests`.
+    - **Set Tests**: Set simple tests with `py-set-tests`.
     - **Solve With Code**: Solve the problem  and associated tests with `py-set-code-and-run-tests`.
     - **Debug**: Debug your solution by re-running  `py-set-code-and-run-tests`.
     - **Use Print**: Use `print` statements frequetly throughout your code, the results from these print statements will be returned as an `Observation`.
