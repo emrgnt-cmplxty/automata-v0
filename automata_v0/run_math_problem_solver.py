@@ -37,7 +37,7 @@ def load(num_events=10):
 if __name__ == "__main__":
     args = parse_arguments()
 
-    df = load(1)
+    df = load(2)
 
     print("key = ", os.getenv("OPENAI_API_KEY_LOCAL", ""))
     openai.api_key = os.getenv("OPENAI_API_KEY_LOCAL", "")
