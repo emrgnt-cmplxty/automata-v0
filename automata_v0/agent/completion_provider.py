@@ -1,7 +1,11 @@
 """Module for the completion provider"""
 from enum import Enum
 
-from agent.constants import ADVANCED_SYSTEM_PROMPT, AGENT_INSTRUCTIONS
+from agent.constants import (
+    ADVANCED_SYSTEM_PROMPT,
+    AGENT_CODING_INSTRUCTIONS,
+    AGENT_MATH_INSTRUCTIONS,
+)
 from automata.agent import OpenAIAutomataAgent
 from automata.config import OpenAIAutomataAgentConfig
 from automata.experimental.tools import PyInterpreterOpenAIToolkitBuilder
@@ -15,6 +19,14 @@ class RunMode(Enum):
     ADVANCED_AGENT = "advanced-agent-with-py-interpreter"
 
 
+class ProblemType(Enum):
+    """Specifies the type of problem"""
+
+    LEETCODE = "leetcode"
+    HUMANEVAL = "humaneval"
+    MATH = "math"
+
+
 class CompletionProvider:
     """Concrete class for completion providers"""
 
@@ -23,6 +35,7 @@ class CompletionProvider:
         run_mode: RunMode,
         model: str,
         temperature: float,
+        problem_type: ProblemType = ProblemType("leetcode"),
     ):
         self.run_mode = run_mode
         self.model = model
@@ -34,6 +47,7 @@ class CompletionProvider:
             conversation=OpenAIConversation(),
             functions=[],
         )
+        self.problem_type = problem_type
 
     def get_completion(self, **kwargs) -> str:
         """Returns the raw and cleaned completions for the given prompt"""
@@ -66,7 +80,12 @@ class CompletionProvider:
         self, task_input: str, code_snippet: str
     ) -> str:
         """Formats the instruction for the given prompt"""
-
-        return AGENT_INSTRUCTIONS.format(
-            TASK_PROMPT=task_input, CODE_PROMPT=code_snippet
-        )
+        if (
+            self.problem_type == ProblemType.LEETCODE
+            or self.problem_type == ProblemType.HUMANEVAL
+        ):
+            return AGENT_CODING_INSTRUCTIONS.format(
+                TASK_PROMPT=task_input, CODE_PROMPT=code_snippet
+            )
+        elif self.problem_type == ProblemType.MATH:
+            return AGENT_MATH_INSTRUCTIONS.format(TASK_PROMPT=task_input)
