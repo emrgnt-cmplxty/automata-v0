@@ -13,10 +13,10 @@ AGENT_MATH_INSTRUCTIONS = textwrap.dedent(
     ### Guidelines:
     - **Solve multiple ways**: Using your available tools, you should be able to attempt to solve the problem multiple ways.
     - **Think Step by Step**: Break the problem down into simple step-by-step components, and then solve each component individually.
-    - **Use Python**: Attempt to solve the problem by using the `py-set-code-and-run-tests` tool. PRINT YOUR FINAL RESULT, AND THE PRINTOUT WILL BE RETURNED.
+    - **Use Python**: Attempt to solve the problem by using the `py-set-code-and-run-tests` tool. PRINT YOUR EXECUTION RESULT, AND IT WILL BE RETURNED IN THE USER RESPONSE.
     - **Use Wolfram**: Attempt to solve the problem or gain insight by using the `wolfram-alpha-oracle`. IF YOUR FIRST QUERY FAILS, TRY A SIMPLER ONE BEFORE MOVING ON.
     - **Solve by hand**: Attempt to solve the problem by hand, or to cross-check previous solutions.
-    - **Reason Thoroughly**: Examine your solutions and REASO ABOUT THE PROBLEM THOROUGHLY, iterate multiple times if necessary to gain a high degree of confidence in your solution.
+    - **Reason Thoroughly**: Examine your solutions and REASON ABOUT THE PROBLEM THOROUGHLY. Iterate multiple times if necessary to gain a high degree of confidence in your final solution.
     - **Format**: VERY IMPORTANT, RETURN YOUR SOLUTION AS BOXED WITH LATEX, e.g. `$\\boxed{{YOUR_SOLUTION}}$`.
 
 

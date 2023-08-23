@@ -77,35 +77,39 @@ def process_problems_solutions(args: argparse.Namespace, num_samples: int):
     results, existing_problems = load_existing_problems(solutions_output_path)
 
     for i_sample in range(num_samples):
-        problem, solution = df.problem[i_sample], df.solution[i_sample]
-        if problem in existing_problems:
-            continue
+        try:
+            problem, solution = df.problem[i_sample], df.solution[i_sample]
+            if problem in existing_problems:
+                continue
 
-        print(f"\nProblem:\n{problem}")
-        print(f"\nSolution:\n{solution}")
+            print(f"\nProblem:\n{problem}")
+            print(f"\nSolution:\n{solution}")
 
-        completion_provider = CompletionProvider(
-            run_mode=RunMode(args.run_mode),
-            model=args.model,
-            temperature=args.temperature,
-            problem_type=ProblemType("math"),
-        )
+            completion_provider = CompletionProvider(
+                run_mode=RunMode(args.run_mode),
+                model=args.model,
+                temperature=args.temperature,
+                problem_type=ProblemType("math"),
+            )
 
-        completion = completion_provider.get_completion(
-            task_input=problem, code_snippet=None
-        )
-        print(f"\nCompletion:\n{completion}")
+            completion = completion_provider.get_completion(
+                task_input=problem, code_snippet=None
+            )
+            print(f"\nCompletion:\n{completion}")
 
-        results.append(
-            {
-                "problem": problem,
-                "solution": solution,
-                "completion": completion,
-            }
-        )
-        if not os.path.exists(args.solutions_output_data_dir):
-            os.makedirs(args.solutions_output_data_dir, exist_ok=True)
-        write_jsonl(solutions_output_path, results)
+            results.append(
+                {
+                    "problem": problem,
+                    "solution": solution,
+                    "completion": completion,
+                }
+            )
+            if not os.path.exists(args.solutions_output_data_dir):
+                os.makedirs(args.solutions_output_data_dir, exist_ok=True)
+            write_jsonl(solutions_output_path, results)
+
+        except Exception as e:
+            print(f"Exception: {e}")
 
 
 def main():
