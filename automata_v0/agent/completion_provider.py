@@ -9,6 +9,11 @@ from agent.constants import (
 from automata.agent import OpenAIAutomataAgent
 from automata.config import OpenAIAutomataAgentConfig
 from automata.experimental.tools import PyInterpreterOpenAIToolkitBuilder
+
+from automata.experimental.tools.builders.wolfram_alpha_oracle_builder import (
+    WolframAlphaOpenAIToolkitBuilder,
+)
+
 from automata.llm import OpenAIChatCompletionProvider, OpenAIConversation
 
 
@@ -66,6 +71,8 @@ class CompletionProvider:
     def advanced_agent_factory(self, instructions: str) -> OpenAIAutomataAgent:
         """Generates an advanced agent instance."""
         tools = PyInterpreterOpenAIToolkitBuilder().build_for_open_ai()
+        tools += WolframAlphaOpenAIToolkitBuilder().build_for_open_ai()
+
         config = OpenAIAutomataAgentConfig(
             stream=True,
             verbose=True,

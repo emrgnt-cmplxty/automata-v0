@@ -118,6 +118,11 @@ def parse_arguments() -> argparse.Namespace:
         default=False,
         help="Overwrite existing solutions.",
     )
+    parser.add_argument(
+        "--num_samples",
+        default=None,
+        help="Number of samples to process",
+    )
     return parser.parse_args()
 
 

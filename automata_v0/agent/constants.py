@@ -11,16 +11,20 @@ AGENT_MATH_INSTRUCTIONS = textwrap.dedent(
     {TASK_PROMPT}
 
     ### Guidelines:
+    - **Solve multiple ways**: Using your available tools, you should be able to attempt to solve the problem multiple ways (Wolfram, Coding, By hand).
     - **Think Step by Step**: Break the problem down into simple step-by-step components, and then solve each component individually.
-    - **Set Tests**: Set simple tests with `py-set-tests`.
-    - **Solve With Code**: Solve the problem  and associated tests with `py-set-code-and-run-tests`.
-    - **Debug**: Debug your solution by re-running  `py-set-code-and-run-tests`.
-    - **Use Print**: Use `print` statements frequetly throughout your code, the results from these print statements will be returned as an `Observation`.
-    - **Format**: Return your solution as boxed with latex, e.g. `$\\boxed{{YOUR_SOLUTION}}$`.
+    - **Use Python**: Attempt to solve the problem by using the `py-set-code-and-run-tests` tool. Any printed output from execution will be returned to you.
+    - **Use Wolfram**: Attempt to solve the problem or gain insight by using the `wolfram-alpha-oracle`.
+    - **Solve by hand**: As a final cross-check, attempt to solve the problem by hand.
+    - **Format**: VERY IMPORTANT, RETURN YOUR SOLUTION AS BOXED WITH LATEX, e.g. `$\\boxed{{YOUR_SOLUTION}}$`.
 
 
     """
 )
+
+# - **Set Tests**: Set simple tests with `py-set-tests`.
+# - **Solve With Code**: Solve the problem  and associated tests with `py-set-code-and-run-tests`.
+
 # USE THE CODE INTERPRETER TO WRITE TESTS AND EXECUTE CODE which will answer the given question.
 #     - **Tool Use**: Leverage any available tools or resources to enhance your solution. For instance, use `py-set-tests` to write tests and `py-set-code-and-run-tests` to run and execute a python solution. PRINT STATEMENTS in executed code will be returned as an Observation, so please leverage this functionality.
 # Leverage any available tools or resources to enhance your solution. For instance, use `py-set-tests` to write tests and `py-set-code-and-run-tests` to run and execute a python solution. PRINT STATEMENTS in executed code will be returned as an Observation, so please leverage this functionality.
