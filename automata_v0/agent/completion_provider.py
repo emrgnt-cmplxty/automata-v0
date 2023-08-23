@@ -5,6 +5,9 @@ from agent.constants import (
     ADVANCED_SYSTEM_PROMPT,
     AGENT_CODING_INSTRUCTIONS,
     AGENT_MATH_INSTRUCTIONS,
+    AGENT_MATH_W_INTERPRETER_INSTRUCTIONS,
+    AGENT_W_WOLFRAM_INSTRUCTIONS,
+    AGENT_W_INTERPRETER_AND_WOLFRAM_INSTRUCTIONS,
 )
 from automata.agent import OpenAIAutomataAgent
 from automata.config import OpenAIAutomataAgentConfig
@@ -21,7 +24,11 @@ class RunMode(Enum):
     """Specifies the mode of running the completion provider"""
 
     VANILLA_ZERO_SHOT = "vanilla-zero-shot"
-    ADVANCED_AGENT = "advanced-agent-with-py-interpreter"
+    ADVANCED_AGENT_W_INTERPRETER = "advanced-agent-with-py-interpreter"
+    ADVANCED_AGENT_W_WOLFRAM = "advanced-agent-with-wolfram"
+    ADVANCED_AGENT_W_INTERPRETER_AND_WOLFRAM = (
+        "advanced-agent-with-wolfram-and-py-interpreter"
+    )
 
 
 class ProblemType(Enum):
@@ -70,8 +77,15 @@ class CompletionProvider:
 
     def advanced_agent_factory(self, instructions: str) -> OpenAIAutomataAgent:
         """Generates an advanced agent instance."""
-        tools = PyInterpreterOpenAIToolkitBuilder().build_for_open_ai()
-        # tools = WolframAlphaOpenAIToolkitBuilder().build_for_open_ai()
+        if self.run_mode == RunMode.ADVANCED_AGENT_W_INTERPRETER:
+            tools = PyInterpreterOpenAIToolkitBuilder().build_for_open_ai()
+        elif self.run_mode == RunMode.ADVANCED_AGENT_W_WOLFRAM:
+            tools = WolframAlphaOpenAIToolkitBuilder().build_for_open_ai()
+        elif self.run_mode == RunMode.ADVANCED_AGENT_W_INTERPRETER_AND_WOLFRAM:
+            tools = (
+                PyInterpreterOpenAIToolkitBuilder().build_for_open_ai()
+                + WolframAlphaOpenAIToolkitBuilder().build_for_open_ai()
+            )
 
         config = OpenAIAutomataAgentConfig(
             stream=True,
@@ -95,4 +109,20 @@ class CompletionProvider:
                 TASK_PROMPT=task_input, CODE_PROMPT=code_snippet
             )
         elif self.problem_type == ProblemType.MATH:
-            return AGENT_MATH_INSTRUCTIONS.format(TASK_PROMPT=task_input)
+            if self.run_mode == RunMode.VANILLA_ZERO_SHOT:
+                return AGENT_MATH_INSTRUCTIONS.format(TASK_PROMPT=task_input)
+            elif self.run_mode == RunMode.ADVANCED_AGENT_W_INTERPRETER:
+                return AGENT_MATH_W_INTERPRETER_INSTRUCTIONS.format(
+                    TASK_PROMPT=task_input
+                )
+            elif self.run_mode == RunMode.AGENT_W_WOLFRAM:
+                return AGENT_W_WOLFRAM_INSTRUCTIONS.format(
+                    TASK_PROMPT=task_input
+                )
+            elif (
+                self.run_mode
+                == RunMode.AGENT_W_INTERPRETER_AND_WOLFRAM_INSTRUCTIONS
+            ):
+                return AGENT_W_INTERPRETER_AND_WOLFRAM_INSTRUCTIONS.format(
+                    TASK_PROMPT=task_input
+                )

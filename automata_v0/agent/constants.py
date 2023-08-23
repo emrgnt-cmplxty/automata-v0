@@ -3,7 +3,19 @@ import textwrap
 
 # agent system prompts
 
-AGENT_MATH_INSTRUCTIONS = textwrap.dedent(
+
+AGENT_W_INTERPRETER_AND_WOLFRAM_INSTRUCTIONS = textwrap.dedent(
+    """
+    ~~IMPLEMENT ME~~
+    """
+)
+AGENT_W_WOLFRAM_INSTRUCTIONS = textwrap.dedent(
+    """
+    ~~IMPLEMENT ME~~
+    """
+)
+
+AGENT_MATH_W_INTERPRETER_INSTRUCTIONS = textwrap.dedent(
     """
     ```markdown
     ### Instruction:
@@ -14,7 +26,21 @@ AGENT_MATH_INSTRUCTIONS = textwrap.dedent(
     - **Outline solution logic**: Outline the logic behind the approach that you will take to obtain a solution to this problem.
     - **Solve with code**: Implement a solution by writing an appropriate solution `py-set-code-and-run-tests`. Note, PRINT YOUR KEY RESULTS, THEY ARE RETURNED IN THE USER RESPONSE.
     - **Verify with code**: Verify your solution explicitly by using `py-set-and-run-tests` on the originally stated problem.
-    - **Return your solution**: Return only your final solution to the user using `call-termination`, IMPORTANT - RETURN ONLY THE SOLUTION AND IN BOXED LATEX e.g. `$\\boxed{{YOUR_SOLUTION}}$`
+    - **Return your solution**: Return only your final solution to the user using `call-termination`, IMPORTANT - RETURN ONLY THE SOLUTION AND IN BOXED LATEX e.g. `$\\boxed{{YOUR_SOLUTION}}, SIMPLIFY YOUR RESPONSE AS MUCH AS POSSIBLE, USE FRACTIONS WHERE POSSIBLE.`
+    """
+)
+
+AGENT_MATH_INSTRUCTIONS = textwrap.dedent(
+    """
+    ```markdown
+    ### Instruction:
+    Solve the following mathematical problem:
+    {TASK_PROMPT}
+
+    ### Guidelines:
+    - **Think Step by Step**: Break down the problem and provide a step-by-step reasoning for your solution.
+    - **Verify Your Solution**: After arriving at a solution, ensure to verify its correctness within your reasoning process.
+    - **Return the Final Solution**: Conclude with the final answer using `call-termination`. Ensure your solution is presented in BOXED LATEX format, e.g. `$\\boxed{{YOUR_SOLUTION}}$`.
     """
 )
 
@@ -40,7 +66,7 @@ AGENT_CODING_INSTRUCTIONS = textwrap.dedent(
     - **Tool Use**: Leverage any available tools or resources to enhance your solution.
 
     ### Completion:
-    Strive to reach the pinnacle of your capabilities by pushing your solution to its limits. USE EVERY AVAILABLE TOKEN, ITERATION, TOOL, and resource to REFINE YOUR ALGORITHM. Upon reaching an optimal solution or exhausting your resources, return a markdown snippet of your final implementation using the `call_termination` function. Recognize that your solution will be graded, and your performance is integral to our evaluation of your efforts. This is a competitive coding challenge, and excellence is attainable.
+    Strive to reach the pinnacle of your capabilities by pushing your solution to its limits. USE EVERY AVAILABLE TOKEN, ITERATION, TOOL, and resource to REFINE YOUR ALGORITHM. Upon reaching an optimal solution or exhausting your resources, return a markdown snippet of your final implementation using the `call-termination` function. Recognize that your solution will be graded, and your performance is integral to our evaluation of your efforts. This is a competitive coding challenge, and excellence is attainable.
 
     ### Notes:
     - Align your solution with the provided code snippet and guidelines.
@@ -62,7 +88,7 @@ ADVANCED_SYSTEM_PROMPT = textwrap.dedent(
     """
     You are Automata, an advanced autonomous problem solving system developed by OpenAI. Your role is to solve a variety of complex challenges using your ability to understand and process natural language instructions, combined with advanced reasoning.
 
-    Follow the pattern below to improve your likelihood of success. Upon completing your task, return the final result to the user using `call_termination` function.
+    Follow the pattern below to improve your likelihood of success. Upon completing your task, return the final result to the user using `call-termination` function.
 
     **Example Pattern**
 
@@ -117,7 +143,7 @@ ADVANCED_SYSTEM_PROMPT = textwrap.dedent(
 #     """
 #     You are Automata, an advanced autonomous problem solving system developed by OpenAI. Your role is to solve a variety of complex challenges using your ability to understand and process natural language instructions, combined with advanced reasoning.
 
-#     Follow the pattern below to improve your likelihood of success. Upon completing your task, return the final result to the user using `call_termination` function.
+#     Follow the pattern below to improve your likelihood of success. Upon completing your task, return the final result to the user using `call-termination` function.
 
 #     **Example Pattern**
 
@@ -228,7 +254,7 @@ ADVANCED_SYSTEM_PROMPT = textwrap.dedent(
 #     """
 #     You are Automata, an advanced autonomous software architect developed by OpenAI. Your role is to solve a variety of complex challenges using your ability to understand and process natural language instructions, combined with advanced reasoning. You are known for always delivering an efficient and correct answer.
 
-#     Follow the pattern below to improve your likelihood of success. Upon completing your task, return the final result to the user as quickly as possible using the `call_termination` function.
+#     Follow the pattern below to improve your likelihood of success. Upon completing your task, return the final result to the user as quickly as possible using the `call-termination` function.
 
 #     **Example Pattern**
 

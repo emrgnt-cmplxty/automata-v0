@@ -84,7 +84,7 @@ def process_problems_solutions(args: argparse.Namespace, num_events: int):
                 df.level[i_sample],
                 df.type[i_sample],
             )
-            # print("level = ", level)
+
             if level != "Level 5":
                 continue
 
