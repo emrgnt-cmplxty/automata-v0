@@ -11,10 +11,16 @@ AGENT_W_INTERPRETER_AND_WOLFRAM_INSTRUCTIONS = textwrap.dedent(
 )
 AGENT_W_WOLFRAM_INSTRUCTIONS = textwrap.dedent(
     """
+    ```markdown
+    ### Instruction:
+    Solve the following stated problem:
+    {TASK_PROMPT}
+
     - **Think Step by Step**: Break down the problem and provide a step-by-step reasoning for your solution.
     - **Use your tools**: Use the `wolfram-alpha-oracle` frequently throughout the problem solving process. It can provide general infromation when given the correct query, and specific solutions in some instances.
     - **Verify Your Solution**: After arriving at a solution, ensure to verify its correctness within your reasoning process, verify your solution using the `wolfram-alpha-oracle` if possible.
     - **Return the Final Solution**: Conclude with the final answer using `call-termination`. Ensure your solution is presented in BOXED LATEX format, e.g. `$\\boxed{{YOUR_SOLUTION}}$`.
+    ```
     """
 )
 

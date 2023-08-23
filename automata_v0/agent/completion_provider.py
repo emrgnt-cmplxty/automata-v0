@@ -78,6 +78,7 @@ class CompletionProvider:
 
     def advanced_agent_factory(self, instructions: str) -> OpenAIAutomataAgent:
         """Generates an advanced agent instance."""
+        tools = []
         if self.run_mode == RunMode.ADVANCED_AGENT_W_INTERPRETER:
             tools = PyInterpreterOpenAIToolkitBuilder().build_for_open_ai()
         elif self.run_mode == RunMode.ADVANCED_AGENT_W_WOLFRAM:
