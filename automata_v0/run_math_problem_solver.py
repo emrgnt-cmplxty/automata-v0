@@ -37,13 +37,13 @@ def load(num_events=10):
 if __name__ == "__main__":
     args = parse_arguments()
 
-    df = load(2)
+    df = load(5)
 
     print("key = ", os.getenv("OPENAI_API_KEY_LOCAL", ""))
     openai.api_key = os.getenv("OPENAI_API_KEY_LOCAL", "")
 
     # print(f"df = {df}")
-    problem, solution = df.problem[0], df.solution[0]
+    problem, solution = df.problem[2], df.solution[2]
 
     completion_provider = CompletionProvider(
         run_mode=RunMode(args.run_mode),
