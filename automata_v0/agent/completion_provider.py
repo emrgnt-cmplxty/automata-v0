@@ -118,13 +118,13 @@ class CompletionProvider:
                 return AGENT_MATH_W_INTERPRETER_INSTRUCTIONS.format(
                     TASK_PROMPT=task_input
                 )
-            elif self.run_mode == RunMode.AGENT_W_WOLFRAM:
+            elif self.run_mode == RunMode.ADVANCED_AGENT_W_WOLFRAM:
                 return AGENT_W_WOLFRAM_INSTRUCTIONS.format(
                     TASK_PROMPT=task_input
                 )
             elif (
                 self.run_mode
-                == RunMode.AGENT_W_INTERPRETER_AND_WOLFRAM_INSTRUCTIONS
+                == RunMode.ADVANCED_AGENT_W_INTERPRETER_AND_WOLFRAM_INSTRUCTIONS
             ):
                 return AGENT_W_INTERPRETER_AND_WOLFRAM_INSTRUCTIONS.format(
                     TASK_PROMPT=task_input
