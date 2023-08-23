@@ -26,7 +26,7 @@ NUM_SAMPLES_DEFAULT = 250
 INPUTS = glob(os.path.join("data", "inputs", "MATH", "*", "*"))
 
 dotenv.load_dotenv()
-np.random.seed(42)
+np.random.seed(43)
 
 
 def load_existing_problems(output_path: str):
@@ -67,8 +67,8 @@ def configure_paths(args: argparse.Namespace, num_samples: int) -> None:
     )
 
 
-def process_problems_solutions(args: argparse.Namespace, num_samples: int):
-    df = load_inputs(num_samples)
+def process_problems_solutions(args: argparse.Namespace, num_events: int):
+    df = load_inputs(num_events)
     openai.api_key = os.getenv("OPENAI_API_KEY_LOCAL", "")
 
     solutions_output_path = os.path.join(
@@ -76,9 +76,18 @@ def process_problems_solutions(args: argparse.Namespace, num_samples: int):
     )
     results, existing_problems = load_existing_problems(solutions_output_path)
 
-    for i_sample in range(num_samples):
+    for i_sample in range(num_events):
         try:
-            problem, solution = df.problem[i_sample], df.solution[i_sample]
+            problem, solution, level, ptype = (
+                df.problem[i_sample],
+                df.solution[i_sample],
+                df.level[i_sample],
+                df.type[i_sample],
+            )
+            # print("level = ", level)
+            if level != "Level 5":
+                continue
+
             if problem in existing_problems:
                 continue
 
@@ -100,6 +109,8 @@ def process_problems_solutions(args: argparse.Namespace, num_samples: int):
             results.append(
                 {
                     "problem": problem,
+                    "type": ptype,
+                    "level": level,
                     "solution": solution,
                     "completion": completion,
                 }
@@ -115,9 +126,9 @@ def process_problems_solutions(args: argparse.Namespace, num_samples: int):
 def main():
     # Parse arguments
     args = parse_arguments()
-    num_samples = args.num_samples or NUM_SAMPLES_DEFAULT
-    configure_paths(args, num_samples)
-    process_problems_solutions(args, num_samples)
+    num_events = args.num_events or NUM_SAMPLES_DEFAULT
+    configure_paths(args, num_events)
+    process_problems_solutions(args, num_events)
 
 
 if __name__ == "__main__":

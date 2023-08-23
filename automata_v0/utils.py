@@ -119,9 +119,10 @@ def parse_arguments() -> argparse.Namespace:
         help="Overwrite existing solutions.",
     )
     parser.add_argument(
-        "--num_samples",
+        "--num-events",
+        type=int,
         default=None,
-        help="Number of samples to process",
+        help="Number of events to process",
     )
     return parser.parse_args()
 

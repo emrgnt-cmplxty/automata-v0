@@ -71,7 +71,7 @@ class CompletionProvider:
     def advanced_agent_factory(self, instructions: str) -> OpenAIAutomataAgent:
         """Generates an advanced agent instance."""
         tools = PyInterpreterOpenAIToolkitBuilder().build_for_open_ai()
-        tools += WolframAlphaOpenAIToolkitBuilder().build_for_open_ai()
+        # tools = WolframAlphaOpenAIToolkitBuilder().build_for_open_ai()
 
         config = OpenAIAutomataAgentConfig(
             stream=True,
