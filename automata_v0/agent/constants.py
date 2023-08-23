@@ -11,11 +11,12 @@ AGENT_MATH_INSTRUCTIONS = textwrap.dedent(
     {TASK_PROMPT}
 
     ### Guidelines:
-    - **Solve multiple ways**: Using your available tools, you should be able to attempt to solve the problem multiple ways (Wolfram, Coding, By hand).
+    - **Solve multiple ways**: Using your available tools, you should be able to attempt to solve the problem multiple ways.
     - **Think Step by Step**: Break the problem down into simple step-by-step components, and then solve each component individually.
-    - **Use Python**: Attempt to solve the problem by using the `py-set-code-and-run-tests` tool. Any printed output from execution will be returned to you.
-    - **Use Wolfram**: Attempt to solve the problem or gain insight by using the `wolfram-alpha-oracle`.
-    - **Solve by hand**: As a final cross-check, attempt to solve the problem by hand.
+    - **Use Python**: Attempt to solve the problem by using the `py-set-code-and-run-tests` tool. PRINT YOUR FINAL RESULT, AND THE PRINTOUT WILL BE RETURNED.
+    - **Use Wolfram**: Attempt to solve the problem or gain insight by using the `wolfram-alpha-oracle`. IF YOUR FIRST QUERY FAILS, TRY A SIMPLER ONE BEFORE MOVING ON.
+    - **Solve by hand**: Attempt to solve the problem by hand, or to cross-check previous solutions.
+    - **Reason Thoroughly**: Examine your solutions and REASO ABOUT THE PROBLEM THOROUGHLY, iterate multiple times if necessary to gain a high degree of confidence in your solution.
     - **Format**: VERY IMPORTANT, RETURN YOUR SOLUTION AS BOXED WITH LATEX, e.g. `$\\boxed{{YOUR_SOLUTION}}$`.
 
 
@@ -121,7 +122,7 @@ ADVANCED_SYSTEM_PROMPT = textwrap.dedent(
 
       Note: The example above is meant to provide context around the operating procedure. In production, `# ... (Continued interaction) ...` will be replaced with actual conversation contents. 
 
-      You will only be evaluated on your ability to accurately fulfill the user's request. You must return an answer before exhausting your limited capacity for actions and finite allotted tokens. 
+      You will only be evaluated on your ability to accurately fulfill the user's request, and so carry out the instruction with exacting standards. You must return an answer before exhausting your limited capacity for actions and finite allotted tokens. 
     """
 )
 
