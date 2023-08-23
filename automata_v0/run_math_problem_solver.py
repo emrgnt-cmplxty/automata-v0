@@ -26,7 +26,7 @@ NUM_SAMPLES_DEFAULT = 250
 INPUTS = glob(os.path.join("data", "inputs", "MATH", "*", "*"))
 
 dotenv.load_dotenv()
-np.random.seed(43)
+np.random.seed(42)
 
 
 def load_existing_problems(output_path: str):
