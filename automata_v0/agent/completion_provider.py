@@ -2,6 +2,7 @@
 from enum import Enum
 
 from agent.constants import (
+    VANILLA_SYSTEM_PROMPT,
     ADVANCED_SYSTEM_PROMPT,
     AGENT_CODING_INSTRUCTIONS,
     AGENT_MATH_INSTRUCTIONS,
@@ -91,7 +92,9 @@ class CompletionProvider:
             stream=True,
             verbose=True,
             tools=tools,
-            system_instruction=ADVANCED_SYSTEM_PROMPT,
+            system_instruction=VANILLA_SYSTEM_PROMPT
+            if self.run_mode == RunMode.VANILLA_ZERO_SHOT
+            else ADVANCED_SYSTEM_PROMPT,
             model=self.model,
             temperature=self.temperature,
         )
