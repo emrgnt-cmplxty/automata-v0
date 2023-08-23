@@ -11,7 +11,7 @@ license = "Apache-2.0"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-automata = { path = "automata_v0/automata" }
+automata = {path = "automata_v0/automata"}
 leetcode_env = { path = "automata_v0/leetcode_hard_gym" }
 python = ">=3.10,<3.12"
 black = "^23.3.0"
@@ -23,6 +23,7 @@ evalplus = "^0.1.6"
 gym = "^0.26.2"
 torch = "^2.0.1"
 transformers = "^4.31.0"
+sympy = "^1.12"
 
 [tool.black]
 line-length = 79
